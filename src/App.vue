@@ -54,7 +54,7 @@
               </v-col>
             </v-row>
 
-            <v-row class="text-center" style="height: 65vh; padding-top: 0px" align="stretch">
+            <v-row class="text-center" style="height: 60vh; padding-top: 0px" align="stretch">
               <v-col cols="12">
                 <v-container style="height: 100%">
                   <v-row style="height: 100%">
