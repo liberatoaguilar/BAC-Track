@@ -125,6 +125,7 @@ export default {
         localStorage.setItem('gender', this.gender);
         localStorage.setItem('weight', this.weight);
         localStorage.setItem('drinks', JSON.stringify(this.drinks));
+        localStorage.setItem('total_BAC', JSON.stringify(this.total_BAC));
       },
       loadData() {
         const stored_gender = localStorage.getItem('gender');
@@ -147,8 +148,9 @@ export default {
             }
           });
 
-          for (const drink of this.drinks) {
-              this.total_BAC += this.calcAddedBAC(drink.std);
+          const stored_total_BAC = localStorage.getItem('total_BAC');
+          if (stored_total_BAC !== null) {
+            this.total_BAC = parseFloat(stored_total_BAC);
           }
 
           this.sober_time = this.calculateSoberTime();
@@ -243,8 +245,9 @@ export default {
               this.total_BAC = 0.00;
               return;
           }
-
+        
           this.total_BAC -= 0.00025;
+          this.saveData();
       },
       removeDrink() {
           let lastDrink = this.drinks.pop();
@@ -275,11 +278,23 @@ export default {
       }
   },
   created() {
-    this.updateBAC();
-    this.intervalId = setInterval(this.updateBAC, 60000);
     this.loadData();
+
+    // interpolate bac with time passed
+    if (this.drinks.length > 0) {
+        const last_drink = new Date(Math.max(...this.drinks.map(drink =>
+        new Date(drink.time))));
+        const now = new Date();
+        let mins = Math.floor((now.getTime() - last_drink.getTime())/(60000));
+        for (let i = 0; i < mins; i++) {
+            this.updateBAC();
+        }
+    }
+    this.intervalId = setInterval(this.updateBAC, 60000);
+
   },
   beforeUnmount() {
+    this.saveData();
     clearInterval(this.intervalId);
   },
   data: () => ({
