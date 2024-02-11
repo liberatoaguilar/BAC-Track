@@ -114,7 +114,7 @@ export default {
       DrinkButton,
       CustomDrink,
       ClearDrink,
-      BACLabel
+      BACLabel,
   },
   methods: {
       clearData() {
@@ -238,6 +238,17 @@ export default {
               this.sober_time = this.calculateSoberTime();
               this.drive_time = this.calculateDriveTime();
               this.saveData();
+              
+              // updaate  drinks
+              if (this.drinks.length > 0) {
+                  const last_drink = new Date(Math.max(...this.drinks.map(drink =>
+                  new Date(drink.time))));
+                  const now = new Date();
+                  let mins = Math.floor((now.getTime() - last_drink.getTime())/(60000));
+                  for (let i = 0; i < mins; i++) {
+                      this.updateBAC();
+                  }
+    }
           }
       },
       updateBAC() {

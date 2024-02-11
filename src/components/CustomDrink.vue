@@ -6,9 +6,7 @@
                     <img width="60px" :src="image" />
                 </v-col>
                 <v-col cols=12>
-                    <v-label>Custom</v-label>
-                </v-col>
-            </v-row>
+                    <v-label>Custom</v-label> </v-col> </v-row>
         </v-container>
     </v-btn>
 
@@ -22,9 +20,11 @@
               <v-text-field v-model="percentage" label="ABV"
               append-inner-icon="mdi-percent" :rules="[...numberRule]"></v-text-field>
               <v-text-field v-model="ounces" label="Oz" :rules="[...numberRule]"></v-text-field>
+              <v-time-picker format="24hr"></v-time-picker> 
+              <TimePicker></TimePicker>
             </v-card-text>
             <v-card-actions>
-              <v-spacer/>
+            <v-spacer/>
               <v-btn color="error" @click="showDialog = false">Cancel</v-btn>
               <v-spacer/>
               <v-btn color="green" @click="submitForm">Save</v-btn>
@@ -36,8 +36,13 @@
 </template>
 
 <script>
+import TimePicker  from '../components/TimePicker.vue'
+
 export default {
   name: 'CustomDrink',
+  compponents: {
+      TimePicker,
+  },
   props: {
     image: String
   },
@@ -46,7 +51,8 @@ export default {
       showDialog: false,
       percentage: '',
       ounces: '',
-      numberRule: [v => /^\d+(\.\d+)?$/.test(v) || 'Must be a number']
+      numberRule: [v => /^\d+(\.\d+)?$/.test(v) || 'Must be a number'],
+      selectedTime: null,
     };
   },
   methods: {
@@ -56,6 +62,7 @@ export default {
 
           this.percentage = '';
           this.ounces = '';
+          this.selectedTime = new Date();
           this.showDialog = false;
       }
     }
